@@ -1,0 +1,2643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathMaster Pro - Enhance Your Calculation Skills</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --success: #00b09b;
+            --warning: #ff8c00;
+            --danger: #ff416c;
+            --info: #00c9ff;
+            --light: #f8f9fa;
+            --dark: #1a1a2e;
+            --card-bg: #ffffff;
+            --body-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--body-bg);
+            color: var(--dark);
+            min-height: 100vh;
+            /* offset page content for fixed navbar */
+            padding-top: 72px;
+        }
+        
+        .navbar {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1030; /* above page content */
+            height: 80px; /* or any value you prefer */
+            padding: 0 1rem;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, rgba(106, 17, 203, 0.9), rgba(37, 117, 252, 0.9)), url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 4rem 0;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 3rem;
+        }
+        
+        .exam-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        
+        .exam-badge {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 1.5rem;
+            background-color: var(--card-bg);
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 16px 16px 0 0 !important;
+            padding: 1.25rem 1.5rem;
+            font-weight: 600;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header.collapsed .toggle-icon {
+            transform: rotate(0deg);
+        }
+        
+        .card-header .toggle-icon {
+            transition: transform 0.3s ease;
+            transform: rotate(180deg);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(106, 17, 203, 0.3);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(to right, #ff8c00, #ffa040);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-success {
+            background: linear-gradient(to right, var(--success), #96e6a1);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .timer-line {
+            height: 8px;
+            background: linear-gradient(to right, var(--success), #96e6a1);
+            width: 100%;
+            transition: width 1s linear;
+            border-radius: 4px;
+        }
+        
+        .question-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .table-responsive {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .table th {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
+            padding: 1rem;
+        }
+        
+        .progress {
+            height: 12px;
+            border-radius: 6px;
+        }
+        
+        .fraction-table td {
+            text-align: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .section-title {
+            border-bottom: 3px solid;
+            border-image: linear-gradient(to right, var(--primary), var(--secondary)) 1;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .option-btn {
+            width: 100%;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            background: white;
+            transition: all 0.2s ease;
+        }
+        
+        .option-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .correct {
+            background: linear-gradient(to right, #d4edda, #c3e6cb);
+            border-color: #28a745;
+        }
+        
+        .incorrect {
+            background: linear-gradient(to right, #f8d7da, #f5c6cb);
+            border-color: #dc3545;
+        }
+        
+        .test-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .question-text {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .footer {
+            background: linear-gradient(to right, var(--dark), #16213e);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .table-range {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .table-range-btn {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .table-range-btn.active {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Compact column-wise table cards (mini tables) */
+        .mini-table-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
+            align-items: start;
+        }
+
+        .mini-table-card {
+            background: rgba(167, 201, 222, 0.98);
+            border-radius: 8px;
+            padding: 6px 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.06);
+            font-size: 0.75rem;
+            line-height: 1.1;
+            color: var(--dark);
+            text-align: left;
+            min-height: 80px;
+        }
+
+        .mini-table-card .mini-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .mini-table-card pre {
+            margin: 0;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Courier New', monospace;
+            white-space: pre-wrap;
+            font-size: 0.92rem;
+        }
+
+        /* Modal range buttons */
+        .modal-range-btn {
+            margin-right: 0.5rem;
+        }
+
+        .modal-range-btn.active {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .performance-chart {
+            height: 200px;
+            margin: 2rem 0;
+        }
+        
+        .skill-progress {
+            margin-bottom: 1.5rem;
+        }
+        
+        .skill-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .skill-name {
+            font-weight: 600;
+        }
+        
+        .skill-value {
+            font-weight: 700;
+        }
+        
+        .collapse-content {
+            padding: 1.5rem;
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-calculator me-2"></i>MathMaster Pro
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#learn">Learn</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#practice">Practice</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#progress">Progress</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-3">Master Math Calculations for Competitive Exams</h1>
+            <p class="lead mb-4">Improve your calculation speed and accuracy for Banking, SSC, RRB, UPSC, and other competitive exams with our comprehensive math practice platform.</p>
+            
+            <div class="exam-badges">
+                <span class="exam-badge">Banking Exams</span>
+                <span class="exam-badge">SSC CGL/CHSL</span>
+                <span class="exam-badge">RRB NTPC/Group D</span>
+                <span class="exam-badge">UPSC CSAT</span>
+                <span class="exam-badge">CAT/MBA</span>
+                <span class="exam-badge">State PSCs</span>
+                <span class="exam-badge">Defence Exams</span>
+                <span class="exam-badge">Teaching Exams</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="container mb-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4>Speed Building</h4>
+                    <p>Improve calculation speed with timed practice sessions and adaptive difficulty levels.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h4>Exam Focused</h4>
+                    <p>Content specifically designed for competitive exam patterns and question types.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>Progress Tracking</h4>
+                    <p>Monitor your improvement with detailed analytics and performance insights.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <!-- Learn Section -->
+        <section id="learn" class="mb-5">
+            <h2 class="section-title">Learn Mathematics</h2>
+            
+            <!-- Multiplication Tables -->
+            <div class="card">
+                <div class="card-header" data-bs-toggle="collapse" data-bs-target="#multiplicationTables">
+                    <h3 class="mb-0"><i class="fas fa-times-circle me-2"></i>Multiplication Tables (1 to 24)</h3>
+                    <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div id="multiplicationTables" class="collapse show">
+                    <div class="collapse-content">
+                        <div class="table-range">
+                            <button class="btn btn-outline-primary table-range-btn active" data-range="1-8">Tables 1-8</button>
+                            <button class="btn btn-outline-primary table-range-btn" data-range="9-16">Tables 9-16</button>
+                            <button class="btn btn-outline-primary table-range-btn" data-range="17-24">Tables 17-24</button>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="table-select" class="form-label">Select Table:</label>
+                                <select id="table-select" class="form-select">
+                                    <!-- Options will be populated by JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Compact column-wise multiplication cards -->
+                        <div id="multiplication-cards" class="mini-table-grid"></div>
+
+                        <!-- Range cards for quick access (1-8, 9-16, 17-24) -->
+                        <div id="tables-cards" class="row g-3 mt-3"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fraction to Percentage -->
+            <div class="card">
+                <div class="card-header" data-bs-toggle="collapse" data-bs-target="#fractionTables">
+                    <h3 class="mb-0"><i class="fas fa-percentage me-2"></i>Fraction to Percentage Conversions</h3>
+                    <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div id="fractionTables" class="collapse">
+                    <div class="collapse-content">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="numerator-select" class="form-label">Select Numerator:</label>
+                                <select id="numerator-select" class="form-select">
+                                    <!-- Options will be populated by JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Compact column-wise fraction cards -->
+                        <div id="fraction-cards" class="mini-table-grid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Squares (1-50) -->
+            <div class="card">
+                <div class="card-header" data-bs-toggle="collapse" data-bs-target="#squaresCard">
+                    <h3 class="mb-0"><i class="fas fa-th-large me-2"></i>Squares (1 to 50)</h3>
+                    <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div id="squaresCard" class="collapse">
+                    <div class="collapse-content">
+                        <div id="squares-cards" class="mini-table-grid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cubes (1-30) -->
+            <div class="card">
+                <div class="card-header" data-bs-toggle="collapse" data-bs-target="#cubesCard">
+                    <h3 class="mb-0"><i class="fas fa-cube me-2"></i>Cubes (1 to 30)</h3>
+                    <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div id="cubesCard" class="collapse">
+                    <div class="collapse-content">
+                        <div id="cubes-cards" class="mini-table-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Practice Section -->
+        <section id="practice" class="mb-5">
+            <h2 class="section-title">Practice Your Skills</h2>
+            
+            <!-- Practice Settings -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-cogs me-2"></i>Test Settings</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label for="question-type" class="form-label">Question Type:</label>
+                            <select id="question-type" class="form-select">
+                                <option value="multiplication">Multiplication Tables</option>
+                                <option value="reverse-multiplication">Reverse Multiplication</option>
+                                <option value="fractions">Fraction to Percentage</option>
+                                <option value="squares">Squares (1-50)</option>
+                                <option value="cubes">Cubes (1-30)</option>
+                                <option value="mixed">Mixed Questions</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="time-limit" class="form-label">Time per Question (seconds):</label>
+                            <select id="time-limit" class="form-select">
+                                <option value="3">3 Seconds</option>
+                                <option value="4">4 Seconds</option>
+                                <option value="5" selected>5 Seconds</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="question-count" class="form-label">Number of Questions:</label>
+                            <select id="question-count" class="form-select">
+                                <option value="10">10 Questions</option>
+                                <option value="20">20 Questions</option>
+                                <option value="30">30 Questions</option>
+                                <option value="50" selected>50 Questions</option>
+                                <option value="100">100 Questions</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="answer-mode" class="form-label">Answer Mode:</label>
+                            <select id="answer-mode" class="form-select">
+                                <option value="with-options" selected>With Options (Multiple Choice)</option>
+                                <option value="without-options">Without Options (Type Answer)</option>
+                            </select>
+                            <div class="form-text">Choose whether to show multiple-choice options or type your answer directly.</div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="tables-range" class="form-label">Tables to Practice:</label>
+                            <select id="tables-range" class="form-select">
+                                <option value="all" selected>All Tables (1-24)</option>
+                                <option value="1-8">Tables 1-8</option>
+                                <option value="9-16">Tables 9-16</option>
+                                <option value="17-24">Tables 17-24</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                            <div id="custom-range" class="mt-2 hidden">
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="number" id="min-table" class="form-control" placeholder="Min" min="1" max="24">
+                                    </div>
+                                    <div class="col">
+                                        <input type="number" id="max-table" class="form-control" placeholder="Max" min="1" max="24">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button id="start-test" class="btn btn-primary btn-lg">
+                            <i class="fas fa-play-circle me-2"></i>Start Practice Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Practice Test Area (Initially Hidden) -->
+            <div id="test-area" class="hidden">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0"><i class="fas fa-clock me-2"></i>Practice Test</h3>
+                        <div>
+                            <span id="question-counter" class="badge bg-light text-dark fs-6">Question 1/50</span>
+                            <span id="timer" class="badge bg-warning text-dark fs-6">5s</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="timer-line mb-4" id="timer-line"></div>
+                        <div class="question-card text-center mb-4">
+                            <h2 id="question-text" class="question-text">12 × 11 = _____</h2>
+                        </div>
+                        <div class="row" id="options-container">
+                            <!-- Options will be populated by JavaScript -->
+                        </div>
+                        <div class="test-controls">
+                            <button id="pause-test" class="btn btn-warning">
+                                <i class="fas fa-pause me-2"></i>Pause
+                            </button>
+                            <button id="stop-test" class="btn btn-danger">
+                                <i class="fas fa-stop me-2"></i>Stop Test
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results Area (Initially Hidden) -->
+            <div id="results-area" class="hidden">
+                <div class="result-card text-center">
+                    <h2 class="mb-4"><i class="fas fa-chart-bar me-2"></i>Test Results</h2>
+                    <div class="row mb-4">
+                        <div class="col-md-3 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-number text-primary" id="correct-answers">0</div>
+                                <p>Correct Answers</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-number text-success" id="percentage">0%</div>
+                                <p>Percentage</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-number text-info" id="time-taken">0s</div>
+                                <p>Time Taken</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-number text-warning" id="score">0</div>
+                                <p>Score</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-chart">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-block mt-4">
+                        <button id="restart-test" class="btn btn-primary btn-lg me-md-2">
+                            <i class="fas fa-redo me-2"></i>Take Another Test
+                        </button>
+                        <button id="review-answers" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-list-ol me-2"></i>Review Answers
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Progress Section -->
+        <section id="progress" class="mb-5">
+            <h2 class="section-title">Your Progress</h2>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-chart-line me-2"></i>Performance Statistics</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Skills Overview</h4>
+                            <div class="skill-progress">
+                                <div class="skill-label">
+                                    <span class="skill-name">Multiplication Accuracy</span>
+                                    <span class="skill-value" id="multiplication-accuracy">0%</span>
+                                </div>
+                                <div class="progress">
+                                    <div id="multiplication-progress" class="progress-bar bg-success" role="progressbar" style="width: 0%">0%</div>
+                                </div>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-label">
+                                    <span class="skill-name">Fraction Conversion</span>
+                                    <span class="skill-value" id="fraction-accuracy">0%</span>
+                                </div>
+                                <div class="progress">
+                                    <div id="fraction-progress" class="progress-bar bg-info" role="progressbar" style="width: 0%">0%</div>
+                                </div>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-label">
+                                    <span class="skill-name">Calculation Speed</span>
+                                    <span class="skill-value" id="speed-score">0%</span>
+                                </div>
+                                <div class="progress">
+                                    <div id="speed-progress" class="progress-bar bg-warning" role="progressbar" style="width: 0%">0%</div>
+                                </div>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-label">
+                                    <span class="skill-name">Overall Performance</span>
+                                    <span class="skill-value" id="overall-score">0%</span>
+                                </div>
+                                <div class="progress">
+                                    <div id="overall-progress" class="progress-bar bg-primary" role="progressbar" style="width: 0%">0%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Recent Tests
+                                <button id="open-progress-modal" type="button" class="btn btn-outline-primary btn-sm ms-2">
+                                    <i class="fas fa-history me-1"></i>View older tests
+                                </button>
+                            </h4>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Type</th>
+                                            <th>Score</th>
+                                            <th>Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="progress-table">
+                                        <!-- Progress data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <!-- Password Protection Overlay -->
+<div id="passwordOverlay" class="position-fixed top-0 start-0 w-100 h-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+    <div class="bg-white rounded-4 shadow-lg p-4 text-center" style="max-width: 400px; width: 90%;">
+        <h3 class="text-dark mb-3">🔐 MathMaster Pro</h3>
+        <p class="text-muted mb-3">Enter access password to continue</p>
+        <input type="password" id="sitePassword" class="form-control form-control-lg mb-3" placeholder="Enter password">
+        <button onclick="checkPassword()" class="btn btn-primary btn-lg w-100">
+            <i class="fas fa-lock-open me-2"></i>Unlock Website
+        </button>
+        <p class="text-muted small mt-3">
+            Get password from our YouTube/Instagram
+            <br>
+            <a href="#" class="text-decoration-none" onclick="showSocialLinks()">Follow us for access</a>
+        </p>
+    </div>
+</div>
+
+<!-- Social Links Modal -->
+<div class="modal fade" id="socialModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Follow for Access</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p class="mb-3">Follow our social media for password:</p>
+                <div class="d-grid gap-2">
+                    <a href="#" class="btn btn-danger">
+                        <i class="fab fa-youtube me-2"></i>YouTube
+                    </a>
+                    <a href="#" class="btn btn-primary">
+                        <i class="fab fa-instagram me-2"></i>Instagram
+                    </a>
+                    <a href="#" class="btn btn-info">
+                        <i class="fab fa-telegram me-2"></i>Telegram
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upgrade Required Modal -->
+<div class="modal fade" id="upgradeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title"><i class="fas fa-crown me-2"></i>Upgrade Required</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-lock fa-3x text-warning mb-3"></i>
+                    <h4>Free Limit Reached!</h4>
+                    <p class="text-muted">You've used all your free questions for today.</p>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body text-center">
+                                <h6>🎁 Free Tier</h6>
+                                <ul class="list-unstyled small text-muted">
+                                    <li>✓ 10 questions/day</li>
+                                    <li>✓ Tables 1-12 only</li>
+                                    <li>✓ Basic timer (5s)</li>
+                                    <li>✗ No progress tracking</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-warning">
+                            <div class="card-body text-center">
+                                <h6 class="text-warning">🚀 Premium Features</h6>
+                                <ul class="list-unstyled small">
+                                    <li>✓ Unlimited questions</li>
+                                    <li>✓ All tables (1-24)</li>
+                                    <li>✓ Custom timers</li>
+                                    <li>✓ Progress tracking</li>
+                                    <li>✓ Fraction conversions</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info">
+                    <h6>💳 How to Upgrade:</h6>
+                    <ol class="mb-0">
+                        <li>Make payment via UPI/Google Pay</li>
+                        <li>Fill Google Form with screenshot</li>
+                        <li>Receive access code via email</li>
+                        <li>Enter code to unlock premium</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Maybe Later</button>
+                <button type="button" class="btn btn-warning" onclick="showPaymentInstructions()">
+                    <i class="fas fa-rocket me-2"></i>Upgrade Now
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Access Code Modal -->
+<div class="modal fade" id="accessCodeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="fas fa-key me-2"></i>Enter Access Code</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Enter your premium access code to unlock all features:</p>
+                <input type="text" id="premiumAccessCode" class="form-control form-control-lg mb-3" placeholder="Enter access code">
+                <div class="alert alert-info">
+                    <small>
+                        <i class="fas fa-info-circle me-1"></i>
+                        Get your code after payment verification. Codes look like: MMW001X5
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="validatePremiumCodeWithTier()">
+                    <i class="fas fa-unlock me-2"></i>Activate Premium
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Progress Modal -->
+    <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="progressModalLabel"><i class="fas fa-list"></i> Test History</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="btn-group" role="group" aria-label="Range selection">
+                            <button type="button" class="btn btn-outline-secondary modal-range-btn active" data-limit="5">5</button>
+                            <button type="button" class="btn btn-outline-secondary modal-range-btn" data-limit="10">10</button>
+                            <button type="button" class="btn btn-outline-secondary modal-range-btn" data-limit="15">15</button>
+                            <button type="button" class="btn btn-outline-secondary modal-range-btn" data-limit="20">20</button>
+                            <button type="button" class="btn btn-outline-secondary modal-range-btn" data-limit="all">All</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Score</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="progress-modal-table">
+                                <!-- Modal progress data populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Payment Tiers Modal - ADD THIS BEFORE FOOTER -->
+    <div class="modal fade" id="paymentTiersModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-crown me-2"></i>Choose Your Premium Plan</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <!-- 3-Month Plan -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-primary">
+                                <div class="card-header bg-primary text-white text-center">
+                                    <h5>3-Month</h5>
+                                    <h3>₹30</h3>
+                                    <small>₹1/day</small>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-unstyled">
+                                        <li>✅ 90 days unlimited access</li>
+                                        <li>✅ All tables (1-24)</li>
+                                        <li>✅ Custom timers</li>
+                                        <li>✅ Progress tracking</li>
+                                        <li>✅ Fraction conversions</li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <button class="btn btn-primary w-100" onclick="selectPlan('3month')">
+                                        Select Plan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 6-Month Plan -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-warning" style="border-width: 2px;">
+                                <div class="card-header bg-warning text-dark text-center">
+                                    <h5>6-Month</h5>
+                                    <h3>₹60</h3>
+                                    <small>₹0.33/day</small>
+                                    
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-unstyled">
+                                        <li>✅ 180 days unlimited access</li>
+                                        <li>✅ All tables (1-24)</li>
+                                        <li>✅ Custom timers</li>
+                                        <li>✅ Progress tracking</li>
+                                        <li>✅ Fraction conversions</li>
+                                        <li>✅ Advanced analytics</li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <button class="btn btn-warning w-100" onclick="selectPlan('6month')">
+                                        Select Plan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Yearly Plan -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-success">
+                                <div class="card-header bg-success text-white text-center">
+                                    <h5>1-Year</h5>
+                                    <h3>₹90</h3>
+                                    <small>₹0.25/day</small>
+                                    
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-unstyled">
+                                        <li>✅ 365 days unlimited access</li>
+                                        <li>✅ All tables (1-24)</li>
+                                        <li>✅ Custom timers</li>
+                                        <li>✅ Progress tracking</li>
+                                        <li>✅ Fraction conversions</li>
+                                        <li>✅ Advanced analytics</li>
+                                        <li>✅ Priority support</li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <button class="btn btn-success w-100" onclick="selectPlan('yearly')">
+                                        Select Plan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- Payment Instructions Modal -->
+    <div class="modal fade" id="paymentInstructionsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-credit-card me-2"></i>Payment Instructions</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong id="pi-plan-name">Plan</strong> — <span id="pi-plan-price">₹0</span></p>
+
+                    <p class="mb-2">1. Send payment to UPI:</p>
+                    <div class="d-flex align-items-center mb-3">
+                        <code id="pi-upi" class="me-2">samuelarul2001@okhdfcbank</code>
+                        <button class="btn btn-sm btn-outline-secondary" id="pi-copy-upi">Copy UPI</button>
+                    </div>
+
+                    <p class="mb-2">2. Take screenshot of the payment.</p>
+
+                    <p class="mb-2">3. Fill the Google Form with the screenshot:</p>
+                    <p>
+                        <a id="pi-form-link" href="#" class="btn btn-outline-primary" target="_blank" rel="noopener noreferrer">
+                            Open Google Form
+                        </a>
+                    </p>
+
+                    <p class="mb-0">4. Receive access code within 2 hours.</p>
+
+                    <hr>
+                    <p class="small text-muted mb-0">For help: WhatsApp +918637474067</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">I've Paid</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="container text-center">
+            <p class="mb-0">MathMaster Pro &copy; 2025 - Enhance Your Calculation Skills</p>
+            <p class="mb-0">Practice makes perfect! Keep improving your math skills for competitive exams.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // DOM Elements
+    const tableSelect = document.getElementById('table-select');
+    const tableBody = document.getElementById('table-body');
+    const numeratorSelect = document.getElementById('numerator-select');
+    const fractionBody = document.getElementById('fraction-body');
+    const startTestBtn = document.getElementById('start-test');
+    const testArea = document.getElementById('test-area');
+    const resultsArea = document.getElementById('results-area');
+    const questionCounter = document.getElementById('question-counter');
+    const timerElement = document.getElementById('timer');
+    const timerLine = document.getElementById('timer-line');
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const answerModeSelect = document.getElementById('answer-mode');
+    const correctAnswersElement = document.getElementById('correct-answers');
+    const percentageElement = document.getElementById('percentage');
+    const timeTakenElement = document.getElementById('time-taken');
+    const scoreElement = document.getElementById('score');
+    const restartTestBtn = document.getElementById('restart-test');
+    const reviewAnswersBtn = document.getElementById('review-answers');
+    const pauseTestBtn = document.getElementById('pause-test');
+    const stopTestBtn = document.getElementById('stop-test');
+    const tablesRangeSelect = document.getElementById('tables-range');
+    const customRangeDiv = document.getElementById('custom-range');
+    const minTableInput = document.getElementById('min-table');
+    const maxTableInput = document.getElementById('max-table');
+    const tableRangeButtons = document.querySelectorAll('.table-range-btn');
+    const questionCountSelect = document.getElementById('question-count');
+
+    // Skill Overview Elements
+    const multiplicationAccuracyElement = document.getElementById('multiplication-accuracy');
+    const multiplicationProgressElement = document.getElementById('multiplication-progress');
+    const fractionAccuracyElement = document.getElementById('fraction-accuracy');
+    const fractionProgressElement = document.getElementById('fraction-progress');
+    const speedScoreElement = document.getElementById('speed-score');
+    const speedProgressElement = document.getElementById('speed-progress');
+    const overallScoreElement = document.getElementById('overall-score');
+    const overallProgressElement = document.getElementById('overall-progress');
+
+    // ==================== PASSWORD / ACCESS PROTECTION ====================
+    const SITE_PASSWORD = "MATH2023"; // Entering this unlocks the site for FREE tier users
+
+    // Free-tier policy: one practice TEST per day (regardless of number of questions).
+    const FREE_DAILY_TESTS = 1;
+
+    // Backwards compatible question-based limit (not used for free-code flow but kept for safety)
+    const FREE_QUESTION_LIMIT = 10;
+
+    // ==================== PREMIUM TIER SYSTEM ====================
+    const PREMIUM_PLANS = {
+        '3month': { duration: 90, price: 30, name: '3-Month Plan' },
+        '6month': { duration: 180, price: 60, name: '6-Month Plan' },
+        'yearly': { duration: 365, price: 90, name: '1-Year Plan' }
+    };
+
+    // Premium codes database
+    let premiumCodesDB = {
+        // 3-Month Codes
+        'MM3M001A1': { type: '3month', expiry: getFutureDate(90), used: false },
+        'MM3M002B2': { type: '3month', expiry: getFutureDate(90), used: false },
+        'MM3M003C3': { type: '3month', expiry: getFutureDate(90), used: false },
+        
+        // 6-Month Codes  
+        'MM6M001X5': { type: '6month', expiry: getFutureDate(180), used: false },
+        'MM6M002Y6': { type: '6month', expiry: getFutureDate(180), used: false },
+        'MM6M003Z7': { type: '6month', expiry: getFutureDate(180), used: false },
+        
+        // Yearly Codes
+        'MMY001R8': { type: 'yearly', expiry: getFutureDate(365), used: false },
+        'MMY002S9': { type: 'yearly', expiry: getFutureDate(365), used: false },
+        'MMY003T0': { type: 'yearly', expiry: getFutureDate(365), used: false }
+    };
+
+    // ==================== FREE USER RESTRICTIONS ====================
+    let dailyQuestionCount = 0;
+    let isPremiumUser = false;
+
+    // ==================== CORE FUNCTIONS ====================
+    function getFutureDate(days) {
+        const date = new Date();
+        date.setDate(date.getDate() + days);
+        return date.toISOString().split('T')[0];
+    }
+
+    // Password check function
+    function checkPassword() {
+        const password = document.getElementById('sitePassword').value.trim();
+
+        // SITE_PASSWORD unlocks the site as a FREE-tier user (limited daily tests)
+        if (password === SITE_PASSWORD) {
+            document.getElementById('passwordOverlay').style.display = 'none';
+            localStorage.setItem('siteAccess', 'granted');
+            localStorage.setItem('siteAccessType', 'free');
+            // track last active date for daily reset
+            const today = new Date().toISOString().split('T')[0];
+            localStorage.setItem('lastActiveDate', today);
+            if (!localStorage.getItem('dailyTestsUsed')) localStorage.setItem('dailyTestsUsed', '0');
+            initializeUserSession();
+            return;
+        }
+
+        alert('❌ Invalid password! Check our social media for current password.');
+        document.getElementById('sitePassword').value = '';
+        document.getElementById('sitePassword').focus();
+    }
+
+    // Check if already accessed and show/hide overlay accordingly. Daily limits are reset separately.
+    function checkExistingAccess() {
+        const hasAccess = localStorage.getItem('siteAccess') === 'granted';
+        if (hasAccess) {
+            document.getElementById('passwordOverlay').style.display = 'none';
+            initializeUserSession();
+        } else {
+            document.getElementById('passwordOverlay').style.display = 'flex';
+        }
+    }
+
+    function initializeUserSession() {
+        // Reset daily counts if day changed
+        resetDailyLimitsIfNeeded();
+
+        dailyQuestionCount = parseInt(localStorage.getItem('dailyQuestions') || '0');
+        const dailyTestsUsed = parseInt(localStorage.getItem('dailyTestsUsed') || '0');
+
+        // Check premium status with expiry validation
+        isPremiumUser = checkPremiumStatus();
+
+        // Determine access type (free, premium)
+        const siteAccessType = localStorage.getItem('siteAccessType') || (isPremiumUser ? 'premium' : null);
+
+        if (!isPremiumUser) {
+            // For free access
+            applyFreeUserRestrictions();
+        }
+
+        updateUIForUserType();
+        updatePremiumStatusUI();
+
+        initMainApp();
+    }
+
+    // Reset daily limits when the calendar day changes
+    function resetDailyLimitsIfNeeded() {
+        const lastDate = localStorage.getItem('lastActiveDate');
+        const today = new Date().toISOString().split('T')[0];
+
+        if (lastDate !== today) {
+            localStorage.setItem('lastActiveDate', today);
+            localStorage.setItem('dailyQuestions', '0');
+            localStorage.setItem('dailyTestsUsed', '0');
+        }
+    }
+
+    function applyFreeUserRestrictions() {
+        const questionCountSelect = document.getElementById('question-count');
+        if (questionCountSelect) {
+            questionCountSelect.innerHTML = `
+                <option value="5">5 Questions (Free)</option>
+                <option value="10" selected>10 Questions (Free Max)</option>
+            `;
+        }
+        
+        const tablesRangeSelect = document.getElementById('tables-range');
+        if (tablesRangeSelect) {
+            // Free users can practice tables 1-12 only
+            tablesRangeSelect.innerHTML = `
+                <option value="1-12" selected>Tables 1-12 (Free)</option>
+            `;
+        }
+        
+        const questionTypeSelect = document.getElementById('question-type');
+        if (questionTypeSelect) {
+            questionTypeSelect.innerHTML = `
+                <option value="multiplication" selected>Multiplication Tables</option>
+                <option value="reverse-multiplication">Reverse Multiplication</option>
+            `;
+            
+            const fractionOptions = questionTypeSelect.querySelectorAll('option[value="fractions"], option[value="mixed"]');
+            fractionOptions.forEach(option => option.remove());
+        }
+        
+        const timeLimitSelect = document.getElementById('time-limit');
+        if (timeLimitSelect) {
+            timeLimitSelect.innerHTML = `
+                <option value="5" selected>5 Seconds (Free)</option>
+            `;
+        }
+    }
+
+    function updateUIForUserType() {
+        const upgradeBtn = document.getElementById('upgrade-btn');
+        
+        if (!upgradeBtn) {
+            const nav = document.querySelector('.navbar-nav');
+            if (nav) {
+                const upgradeItem = document.createElement('li');
+                upgradeItem.className = 'nav-item';
+                upgradeItem.innerHTML = `
+                    <button class="btn btn-warning btn-sm ms-2" id="upgrade-btn">
+                        <i class="fas fa-crown me-1"></i>${isPremiumUser ? 'Premium' : 'Upgrade'}
+                    </button>
+                `;
+                nav.appendChild(upgradeItem);
+                
+                document.getElementById('upgrade-btn').addEventListener('click', showUpgradeOptions);
+            }
+        } else {
+            upgradeBtn.innerHTML = `<i class="fas fa-crown me-1"></i>${isPremiumUser ? 'Premium' : 'Upgrade'}`;
+            upgradeBtn.className = `btn btn-sm ms-2 ${isPremiumUser ? 'btn-success' : 'btn-warning'}`;
+        }
+    }
+
+    // ==================== PREMIUM TIER FUNCTIONS ====================
+    function validatePremiumCode(code) {
+        const enteredCode = code.trim().toUpperCase();
+        const premiumData = premiumCodesDB[enteredCode];
+        
+        if (!premiumData) {
+            return { 
+                valid: false, 
+                reason: '❌ Invalid access code. Please check and try again.',
+                tier: null
+            };
+        }
+        
+        if (premiumData.used) {
+            return { 
+                valid: false, 
+                reason: '❌ This code has already been used.',
+                tier: premiumData.type
+            };
+        }
+        
+        const today = new Date();
+        const expiryDate = new Date(premiumData.expiry);
+        
+        if (today > expiryDate) {
+            return { 
+                valid: false, 
+                reason: `❌ This code expired on ${expiryDate.toLocaleDateString()}.`,
+                tier: premiumData.type
+            };
+        }
+        
+        return { 
+            valid: true, 
+            tier: premiumData.type,
+            expiry: premiumData.expiry,
+            daysLeft: Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24))
+        };
+    }
+
+    function activatePremiumAccess(validationResult) {
+        if (!validationResult.valid) return false;
+        premiumCodesDB[document.getElementById('premiumAccessCode').value.trim().toUpperCase()].used = true;
+
+        isPremiumUser = true;
+        localStorage.setItem('isPremiumUser', 'true');
+        localStorage.setItem('premiumTier', validationResult.tier);
+        localStorage.setItem('premiumExpiry', validationResult.expiry);
+        localStorage.setItem('premiumActivationDate', new Date().toISOString());
+
+        // Mark site as granted and premium access type
+        localStorage.setItem('siteAccess', 'granted');
+        localStorage.setItem('siteAccessType', 'premium');
+
+        return true;
+    }
+
+    function checkPremiumStatus() {
+        const isPremium = localStorage.getItem('isPremiumUser') === 'true';
+        const expiry = localStorage.getItem('premiumExpiry');
+        const tier = localStorage.getItem('premiumTier');
+        
+        if (!isPremium || !expiry) return false;
+        
+        const today = new Date();
+        const expiryDate = new Date(expiry);
+        
+        if (today > expiryDate) {
+            localStorage.removeItem('isPremiumUser');
+            localStorage.removeItem('premiumTier');
+            localStorage.removeItem('premiumExpiry');
+            localStorage.removeItem('premiumActivationDate');
+            isPremiumUser = false;
+            
+            showNotification('⚠️ Your premium access has expired. Please renew to continue.', 'warning');
+            return false;
+        }
+        
+        isPremiumUser = true;
+        return true;
+    }
+
+    function getPremiumDaysRemaining() {
+        const expiry = localStorage.getItem('premiumExpiry');
+        if (!expiry) return 0;
+        
+        const today = new Date();
+        const expiryDate = new Date(expiry);
+        const daysLeft = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+        
+        return Math.max(0, daysLeft);
+    }
+
+    function updatePremiumStatusUI() {
+        if (!isPremiumUser) return;
+        
+        const tier = localStorage.getItem('premiumTier');
+        const daysLeft = getPremiumDaysRemaining();
+        
+        const upgradeBtn = document.getElementById('upgrade-btn');
+        if (upgradeBtn) {
+            upgradeBtn.innerHTML = `<i class="fas fa-crown me-1"></i>${tier} (${daysLeft}d)`;
+            upgradeBtn.className = 'btn btn-success btn-sm ms-2';
+            upgradeBtn.title = `${PREMIUM_PLANS[tier].name} - ${daysLeft} days remaining`;
+        }
+        
+        showPremiumBadge(tier, daysLeft);
+    }
+
+    function showPremiumBadge(tier, daysLeft) {
+        let premiumBadge = document.getElementById('premium-badge');
+        
+        if (!premiumBadge) {
+            premiumBadge = document.createElement('div');
+            premiumBadge.id = 'premium-badge';
+            premiumBadge.className = 'ms-2';
+            premiumBadge.innerHTML = `
+                <span class="badge bg-success">
+                    <i class="fas fa-crown me-1"></i>${tier.toUpperCase()}
+                    <span class="ms-1">${daysLeft}d</span>
+                </span>
+            `;
+            
+            const navbarBrand = document.querySelector('.navbar-brand');
+            if (navbarBrand) {
+                navbarBrand.appendChild(premiumBadge);
+            }
+        } else {
+            premiumBadge.innerHTML = `
+                <span class="badge bg-success">
+                    <i class="fas fa-crown me-1"></i>${tier.toUpperCase()}
+                    <span class="ms-1">${daysLeft}d</span>
+                </span>
+            `;
+        }
+    }
+
+    // ==================== UPGRADE SYSTEM ====================
+    function showUpgradeModal() {
+        const upgradeModal = new bootstrap.Modal(document.getElementById('upgradeModal'));
+        upgradeModal.show();
+    }
+
+    function showTieredPaymentInstructions() {
+        const paymentModal = new bootstrap.Modal(document.getElementById('paymentTiersModal'));
+        paymentModal.show();
+    }
+
+    function showPaymentInstructions() {
+        bootstrap.Modal.getInstance(document.getElementById('upgradeModal')).hide();
+        showTieredPaymentInstructions();
+    }
+
+    function showUpgradeOptions() {
+        if (isPremiumUser) {
+            alert('🎉 You already have premium access!');
+            return;
+        }
+        showUpgradeModal();
+    }
+
+    function showAccessCodeModal() {
+        const accessModal = new bootstrap.Modal(document.getElementById('accessCodeModal'));
+        accessModal.show();
+    }
+
+    function validatePremiumCodeWithTier() {
+        const code = document.getElementById('premiumAccessCode').value.trim().toUpperCase();
+        const validation = validatePremiumCode(code);
+        
+        if (validation.valid) {
+            const activated = activatePremiumAccess(validation);
+            
+            if (activated) {
+                bootstrap.Modal.getInstance(document.getElementById('accessCodeModal')).hide();
+                
+                updateUIForUserType();
+                updatePremiumStatusUI();
+                
+                showNotification(
+                    `🎉 ${PREMIUM_PLANS[validation.tier].name} activated! ${validation.daysLeft} days remaining.`, 
+                    'success'
+                );
+                
+                setTimeout(() => location.reload(), 1500);
+            }
+        } else {
+            alert(validation.reason);
+            document.getElementById('premiumAccessCode').value = '';
+            document.getElementById('premiumAccessCode').focus();
+        }
+    }
+
+    function selectPlan(plan) {
+        const planInfo = PREMIUM_PLANS[plan];
+        
+        bootstrap.Modal.getInstance(document.getElementById('paymentTiersModal')).hide();
+        
+        // Show a friendly payment instructions modal with clickable Google Form link
+        try {
+            // populate modal content
+            document.getElementById('pi-plan-name').textContent = planInfo.name;
+            document.getElementById('pi-plan-price').textContent = '₹' + planInfo.price;
+
+            const upiText = 'samuelarul2001@okhdfcbank';
+            const piUpiEl = document.getElementById('pi-upi');
+            if (piUpiEl) piUpiEl.textContent = upiText;
+
+            const copyBtn = document.getElementById('pi-copy-upi');
+            if (copyBtn) {
+                copyBtn.onclick = async () => {
+                    try {
+                        await navigator.clipboard.writeText(upiText);
+                        showNotification('UPI copied to clipboard', 'success');
+                    } catch (err) {
+                        showNotification('Could not copy automatically. Please copy the UPI manually.', 'warning');
+                    }
+                };
+            }
+
+            const formLink = 'https://docs.google.com/forms/d/1EKFFMuHGJ5A1g2GMUCs0YPra6nb5XLfQNCgjP-2fbNY/edit#question=1769379772&field=173794758';
+            const piFormLink = document.getElementById('pi-form-link');
+            if (piFormLink) {
+                piFormLink.href = formLink;
+                piFormLink.textContent = 'Open Google Form to submit payment screenshot';
+                piFormLink.setAttribute('target', '_blank');
+                piFormLink.setAttribute('rel', 'noopener noreferrer');
+            }
+
+            const piModal = new bootstrap.Modal(document.getElementById('paymentInstructionsModal'));
+            piModal.show();
+        } catch (e) {
+            // fallback to alert if modal not present
+            alert(`💳 ${planInfo.name} - ₹${planInfo.price}\n\nPayment Instructions:\n1. Send ₹${planInfo.price} to UPI: samuelarul2001@okhdfcbank\n2. Take screenshot\n3. Fill Google Form: ${'https://forms.gle/7EwfCbNThib1kuYk9'}\n4. Receive access code within 2 hours!\n\nFor help: WhatsApp +91 8637474067`);
+        }
+
+        setTimeout(() => showAccessCodeModal(), 1000);
+    }
+
+    function showSocialLinks() {
+        const socialModal = new bootstrap.Modal(document.getElementById('socialModal'));
+        socialModal.show();
+    }
+
+    // ==================== TEST SYSTEM FUNCTIONS ====================
+    function canStartTest(questionCount) {
+        // Premium users can always start
+        if (isPremiumUser) return true;
+
+        // Ensure user has unlocked site (free or premium)
+        const siteAccess = localStorage.getItem('siteAccess') === 'granted';
+        const accessType = localStorage.getItem('siteAccessType') || 'free';
+
+        if (!siteAccess) {
+            alert('🔐 Please unlock the site using the access password before starting a test.');
+            document.getElementById('passwordOverlay').style.display = 'flex';
+            return false;
+        }
+
+        // Free-code users: allow fixed number of full tests per day (FREE_DAILY_TESTS)
+        if (accessType === 'free') {
+            const used = parseInt(localStorage.getItem('dailyTestsUsed') || '0');
+            if (used >= FREE_DAILY_TESTS) {
+                showUpgradeModal();
+                return false;
+            }
+            return true;
+        }
+
+        // Fallback: question-based limit
+        if (dailyQuestionCount >= FREE_QUESTION_LIMIT) {
+            showUpgradeModal();
+            return false;
+        }
+
+        if (dailyQuestionCount + questionCount > FREE_QUESTION_LIMIT) {
+            alert(`⚠️ Free limit: ${FREE_QUESTION_LIMIT} questions/day. You have ${FREE_QUESTION_LIMIT - dailyQuestionCount} questions left.`);
+            return false;
+        }
+
+        return true;
+    }
+
+    function trackQuestionUsage(count) {
+        if (isPremiumUser) return; // no tracking for premium
+
+        const accessType = localStorage.getItem('siteAccessType') || 'free';
+
+        if (accessType === 'free') {
+            // Track one full test usage (regardless of question count)
+            let used = parseInt(localStorage.getItem('dailyTestsUsed') || '0');
+            used += 1;
+            localStorage.setItem('dailyTestsUsed', used.toString());
+
+            const remaining = FREE_DAILY_TESTS - used;
+            if (remaining <= 0) {
+                showNotification('⚠️ You have used your free test for today. Upgrade to continue.', 'warning');
+            } else {
+                showNotification(`ℹ️ ${remaining} free test(s) remaining today`, 'info');
+            }
+        } else {
+            dailyQuestionCount += count;
+            localStorage.setItem('dailyQuestions', dailyQuestionCount.toString());
+
+            const remaining = FREE_QUESTION_LIMIT - dailyQuestionCount;
+            if (remaining <= 3 && remaining > 0) {
+                showNotification(`ℹ️ ${remaining} free questions remaining today`, 'info');
+            }
+        }
+    }
+
+    function showNotification(message, type) {
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} position-fixed`;
+        alert.style.cssText = `
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+        `;
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(alert);
+        
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.remove();
+            }
+        }, 5000);
+    }
+
+    // ==================== MAIN APPLICATION ====================
+    document.addEventListener('DOMContentLoaded', function() {
+        checkExistingAccess();
+    });
+
+    function initMainApp() {
+        populateTableSelect();
+        populateNumeratorSelect();
+        showMultiplicationTable(1);
+        showFractionTable(1);
+    renderTableRangeCards();
+    renderMultiplicationCards(1, 8, 10);
+    renderFractionCards(1, 30);
+    populateSquares();
+    populateCubes();
+        updateSkillOverview();
+        
+        tableSelect.addEventListener('change', (e) => {
+            showMultiplicationTable(parseInt(e.target.value));
+        });
+        
+        numeratorSelect.addEventListener('change', (e) => {
+            showFractionTable(parseInt(e.target.value));
+        });
+        
+        startTestBtn.addEventListener('click', function() {
+            const questionCount = parseInt(questionCountSelect.value);
+            if (!canStartTest(questionCount)) return;
+            if (!isPremiumUser) trackQuestionUsage(questionCount);
+            startTest();
+        });
+
+        restartTestBtn.addEventListener('click', function() {
+            const questionCount = parseInt(questionCountSelect.value);
+            if (!canStartTest(questionCount)) return;
+            if (!isPremiumUser) trackQuestionUsage(questionCount);
+            startTest();
+        });
+        reviewAnswersBtn.addEventListener('click', reviewAnswers);
+        pauseTestBtn.addEventListener('click', togglePauseTest);
+        stopTestBtn.addEventListener('click', stopTest);
+        
+        tablesRangeSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'custom') {
+                customRangeDiv.classList.remove('hidden');
+            } else {
+                customRangeDiv.classList.add('hidden');
+            }
+        });
+        
+        tableRangeButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                tableRangeButtons.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                const range = e.target.getAttribute('data-range');
+                filterTablesByRange(range);
+                // also render compact multiplication cards for the selected range
+                const [min, max] = range.split('-').map(Number);
+                renderMultiplicationCards(min, max, 10);
+            });
+        });
+        
+        updateProgressTable(5);
+
+        const openProgressModalBtn = document.getElementById('open-progress-modal');
+        const progressModalEl = document.getElementById('progressModal');
+        const modalRangeBtns = document.querySelectorAll('.modal-range-btn');
+
+        let progressModal;
+        try {
+            progressModal = new bootstrap.Modal(progressModalEl);
+        } catch (e) {
+            progressModal = null;
+        }
+
+        openProgressModalBtn.addEventListener('click', () => {
+            const activeBtn = document.querySelector('.modal-range-btn.active');
+            const limit = activeBtn ? activeBtn.getAttribute('data-limit') : '5';
+            updateProgressTable(limit === 'all' ? 'all' : parseInt(limit), 'progress-modal-table');
+            if (progressModal) progressModal.show();
+        });
+
+        modalRangeBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                modalRangeBtns.forEach(b => b.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+                const limit = e.currentTarget.getAttribute('data-limit');
+                updateProgressTable(limit === 'all' ? 'all' : parseInt(limit), 'progress-modal-table');
+            });
+        });
+
+        initializePerformanceChart();
+        overrideStartTest();
+    }
+
+    function overrideStartTest() {
+        const originalStartTest = window.startTest;
+        
+        window.startTest = function() {
+            const questionCount = parseInt(document.getElementById('question-count').value);
+            
+            if (!canStartTest(questionCount)) {
+                return;
+            }
+            
+            if (!isPremiumUser) {
+                trackQuestionUsage(questionCount);
+            }
+            
+            originalStartTest();
+        };
+    }
+
+    // Application State
+    let currentTable = 1;
+    let currentNumerator = 1;
+    let testInProgress = false;
+    let testPaused = false;
+    let currentQuestionIndex = 0;
+    let questions = [];
+    let userAnswers = [];
+    let correctCount = 0;
+    let timerInterval;
+    let timeLeft;
+    let totalTime = 0;
+    let testStartTime;
+    let performanceChart;
+
+    // Initialize the application
+    function init() {
+        populateTableSelect();
+        populateNumeratorSelect();
+        showMultiplicationTable(1);
+        showFractionTable(1);
+    renderTableRangeCards();
+    renderMultiplicationCards(1, 8, 10);
+    renderFractionCards(1, 30);
+    populateSquares();
+    populateCubes();
+        updateSkillOverview();
+        
+        tableSelect.addEventListener('change', (e) => {
+            showMultiplicationTable(parseInt(e.target.value));
+        });
+        
+        numeratorSelect.addEventListener('change', (e) => {
+            showFractionTable(parseInt(e.target.value));
+        });
+        
+        startTestBtn.addEventListener('click', function() {
+            const questionCount = parseInt(questionCountSelect.value);
+            if (!canStartTest(questionCount)) return;
+            if (!isPremiumUser) trackQuestionUsage(questionCount);
+            startTest();
+        });
+
+        restartTestBtn.addEventListener('click', function() {
+            const questionCount = parseInt(questionCountSelect.value);
+            if (!canStartTest(questionCount)) return;
+            if (!isPremiumUser) trackQuestionUsage(questionCount);
+            startTest();
+        });
+        reviewAnswersBtn.addEventListener('click', reviewAnswers);
+        pauseTestBtn.addEventListener('click', togglePauseTest);
+        stopTestBtn.addEventListener('click', stopTest);
+        
+        tablesRangeSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'custom') {
+                customRangeDiv.classList.remove('hidden');
+            } else {
+                customRangeDiv.classList.add('hidden');
+            }
+        });
+        
+        tableRangeButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                tableRangeButtons.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                const range = e.target.getAttribute('data-range');
+                filterTablesByRange(range);
+            });
+        });
+        
+        updateProgressTable(5);
+
+        const openProgressModalBtn = document.getElementById('open-progress-modal');
+        const progressModalEl = document.getElementById('progressModal');
+        const modalRangeBtns = document.querySelectorAll('.modal-range-btn');
+
+        let progressModal;
+        try {
+            progressModal = new bootstrap.Modal(progressModalEl);
+        } catch (e) {
+            progressModal = null;
+        }
+
+        openProgressModalBtn.addEventListener('click', () => {
+            const activeBtn = document.querySelector('.modal-range-btn.active');
+            const limit = activeBtn ? activeBtn.getAttribute('data-limit') : '5';
+            updateProgressTable(limit === 'all' ? 'all' : parseInt(limit), 'progress-modal-table');
+            if (progressModal) progressModal.show();
+        });
+
+        modalRangeBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                modalRangeBtns.forEach(b => b.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+                const limit = e.currentTarget.getAttribute('data-limit');
+                updateProgressTable(limit === 'all' ? 'all' : parseInt(limit), 'progress-modal-table');
+            });
+        });
+
+        initializePerformanceChart();
+    }
+
+    function populateTableSelect() {
+        for (let i = 1; i <= 24; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `Table of ${i}`;
+            tableSelect.appendChild(option);
+        }
+    }
+
+    function filterTablesByRange(range) {
+        const [min, max] = range.split('-').map(Number);
+        const options = tableSelect.querySelectorAll('option');
+        
+        options.forEach(option => {
+            const value = parseInt(option.value);
+            if (value >= min && value <= max) {
+                option.style.display = 'block';
+            } else {
+                option.style.display = 'none';
+            }
+        });
+        
+        for (let option of options) {
+            if (option.style.display !== 'none') {
+                tableSelect.value = option.value;
+                showMultiplicationTable(parseInt(option.value));
+                break;
+            }
+        }
+    }
+
+    function populateNumeratorSelect() {
+        for (let i = 1; i <= 30; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `Numerator ${i}`;
+            numeratorSelect.appendChild(option);
+        }
+    }
+
+    function showMultiplicationTable(tableNumber) {
+        const container = document.getElementById('multiplication-cards');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const card = document.createElement('div');
+        card.className = 'mini-table-card';
+
+        const title = document.createElement('div');
+        title.className = 'mini-title';
+        title.textContent = `Table ${tableNumber}`;
+
+        const list = document.createElement('pre');
+        let text = '';
+        for (let i = 1; i <= 20; i++) {
+            text += `${tableNumber} × ${i} = ${tableNumber * i}` + '\n';
+        }
+        list.textContent = text;
+
+        card.appendChild(title);
+        card.appendChild(list);
+        container.appendChild(card);
+    }
+
+    // showFractionTable now uses compact fraction cards
+    function showFractionTable(numerator) {
+        renderFractionCards(numerator, 30);
+    }
+
+    // Render clickable cards for table ranges (1-8, 9-16, 17-24)
+    function renderTableRangeCards() {
+        const container = document.getElementById('tables-cards');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const ranges = [
+            { title: 'Tables 1-8', min: 1, max: 8 },
+            { title: 'Tables 9-16', min: 9, max: 16 },
+            { title: 'Tables 17-24', min: 17, max: 24 }
+        ];
+
+        ranges.forEach(r => {
+            const col = document.createElement('div');
+            col.className = 'col-md-4';
+
+            const card = document.createElement('div');
+            card.className = 'card p-3 h-100';
+
+            const header = document.createElement('h5');
+            header.textContent = r.title;
+            header.className = 'mb-3';
+
+            const inner = document.createElement('div');
+            inner.className = 'd-flex flex-wrap gap-2';
+
+            for (let i = r.min; i <= r.max; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-outline-primary btn-sm';
+                btn.textContent = `Table ${i}`;
+                btn.addEventListener('click', () => {
+                    tableSelect.value = i;
+                    showMultiplicationTable(i);
+                    // open the table collapse if closed
+                    const bsCollapse = new bootstrap.Collapse(document.getElementById('multiplicationTables'), { toggle: false });
+                    bsCollapse.show();
+                });
+                inner.appendChild(btn);
+            }
+
+            card.appendChild(header);
+            card.appendChild(inner);
+            col.appendChild(card);
+            container.appendChild(col);
+        });
+    }
+
+    // Render multiplication tables as compact column-wise cards (minimap boxes)
+    function renderMultiplicationCards(min = 1, max = 8, perRow = 10) {
+        const container = document.getElementById('multiplication-cards');
+        if (!container) return;
+        container.innerHTML = '';
+
+        for (let t = min; t <= max; t++) {
+            const card = document.createElement('div');
+            card.className = 'mini-table-card';
+
+            const title = document.createElement('div');
+            title.className = 'mini-title';
+            title.textContent = `Table ${t}`;
+
+            const list = document.createElement('pre');
+            let text = '';
+            for (let i = 1; i <= perRow; i++) {
+                text += `${t} × ${i} = ${t * i}` + '\n';
+            }
+            list.textContent = text;
+
+            card.appendChild(title);
+            card.appendChild(list);
+            container.appendChild(card);
+        }
+    }
+
+    // Render fraction cards (numerator / denominator = %), one card per denominator
+    function renderFractionCards(numerator = 1, maxDen = 30) {
+        const container = document.getElementById('fraction-cards');
+        if (!container) return;
+        container.innerHTML = '';
+
+        for (let d = 1; d <= maxDen; d++) {
+            const card = document.createElement('div');
+            card.className = 'mini-table-card';
+
+            const title = document.createElement('div');
+            title.className = 'mini-title';
+            title.textContent = `${numerator}/${d}`;
+
+            const p = document.createElement('pre');
+            const percent = (numerator / d * 100).toFixed(2);
+            p.textContent = `${numerator}/${d} = ${percent}%`;
+
+            card.appendChild(title);
+            card.appendChild(p);
+            container.appendChild(card);
+        }
+    }
+
+    // Populate Squares (1-50) as compact cards
+    function populateSquares() {
+        const container = document.getElementById('squares-cards');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let n = 1; n <= 50; n++) {
+            const card = document.createElement('div');
+            card.className = 'mini-table-card';
+
+            const title = document.createElement('div');
+            title.className = 'mini-title';
+            title.textContent = `n = ${n}`;
+
+            const pre = document.createElement('pre');
+            pre.textContent = `${n}² = ${n * n}`;
+
+            card.appendChild(title);
+            card.appendChild(pre);
+            container.appendChild(card);
+        }
+    }
+
+    // Populate Cubes (1-30) as compact cards
+    function populateCubes() {
+        const container = document.getElementById('cubes-cards');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let n = 1; n <= 30; n++) {
+            const card = document.createElement('div');
+            card.className = 'mini-table-card';
+
+            const title = document.createElement('div');
+            title.className = 'mini-title';
+            title.textContent = `n = ${n}`;
+
+            const pre = document.createElement('pre');
+            pre.textContent = `${n}³ = ${n * n * n}`;
+
+            card.appendChild(title);
+            card.appendChild(pre);
+            container.appendChild(card);
+        }
+    }
+
+
+
+    function updateSkillOverview() {
+        const testResults = JSON.parse(localStorage.getItem('mathTestResults') || '[]');
+        
+        if (testResults.length === 0) {
+            multiplicationAccuracyElement.textContent = '0%';
+            multiplicationProgressElement.style.width = '0%';
+            multiplicationProgressElement.textContent = '0%';
+            
+            fractionAccuracyElement.textContent = '0%';
+            fractionProgressElement.style.width = '0%';
+            fractionProgressElement.textContent = '0%';
+            
+            speedScoreElement.textContent = '0%';
+            speedProgressElement.style.width = '0%';
+            speedProgressElement.textContent = '0%';
+            
+            overallScoreElement.textContent = '0%';
+            overallProgressElement.style.width = '0%';
+            overallProgressElement.textContent = '0%';
+            return;
+        }
+        
+        let multiplicationTotal = 0;
+        let multiplicationCount = 0;
+        let fractionTotal = 0;
+        let fractionCount = 0;
+        let speedTotal = 0;
+        let speedCount = 0;
+        
+        testResults.forEach(result => {
+            if (result.type === 'multiplication' || result.type === 'reverse-multiplication' || result.type === 'mixed') {
+                multiplicationTotal += result.percentage;
+                multiplicationCount++;
+            }
+            
+            if (result.type === 'fractions' || result.type === 'mixed') {
+                fractionTotal += result.percentage;
+                fractionCount++;
+            }
+            
+            const timePerQuestion = result.time / result.total;
+            let speedScore = 0;
+            if (timePerQuestion <= 3) speedScore = 100;
+            else if (timePerQuestion <= 5) speedScore = 80;
+            else if (timePerQuestion <= 7) speedScore = 60;
+            else if (timePerQuestion <= 10) speedScore = 40;
+            else speedScore = 20;
+            
+            speedTotal += speedScore;
+            speedCount++;
+        });
+        
+        const multiplicationAvg = multiplicationCount > 0 ? Math.round(multiplicationTotal / multiplicationCount) : 0;
+        const fractionAvg = fractionCount > 0 ? Math.round(fractionTotal / fractionCount) : 0;
+        const speedAvg = speedCount > 0 ? Math.round(speedTotal / speedCount) : 0;
+        const overallAvg = Math.round((multiplicationAvg + fractionAvg + speedAvg) / 3);
+        
+        multiplicationAccuracyElement.textContent = `${multiplicationAvg}%`;
+        multiplicationProgressElement.style.width = `${multiplicationAvg}%`;
+        multiplicationProgressElement.textContent = `${multiplicationAvg}%`;
+        
+        fractionAccuracyElement.textContent = `${fractionAvg}%`;
+        fractionProgressElement.style.width = `${fractionAvg}%`;
+        fractionProgressElement.textContent = `${fractionAvg}%`;
+        
+        speedScoreElement.textContent = `${speedAvg}%`;
+        speedProgressElement.style.width = `${speedAvg}%`;
+        speedProgressElement.textContent = `${speedAvg}%`;
+        
+        overallScoreElement.textContent = `${overallAvg}%`;
+        overallProgressElement.style.width = `${overallAvg}%`;
+        overallProgressElement.textContent = `${overallAvg}%`;
+    }
+
+    function startTest() {
+        const questionType = document.getElementById('question-type').value;
+        const timeLimit = parseInt(document.getElementById('time-limit').value);
+        const tablesRange = document.getElementById('tables-range').value;
+        const questionCount = parseInt(questionCountSelect.value);
+        
+        let minTable = 1, maxTable = 24;
+        // Use topic-specific ranges for squares/cubes
+        if (questionType === 'squares') {
+            minTable = 1; maxTable = 50;
+        } else if (questionType === 'cubes') {
+            minTable = 1; maxTable = 30;
+        } else {
+            if (tablesRange === 'custom') {
+                minTable = parseInt(minTableInput.value) || 1;
+                maxTable = parseInt(maxTableInput.value) || 24;
+            } else if (tablesRange === '1-8') {
+                minTable = 1;
+                maxTable = 8;
+            } else if (tablesRange === '9-16') {
+                minTable = 9;
+                maxTable = 16;
+            } else if (tablesRange === '17-24') {
+                minTable = 17;
+                maxTable = 24;
+            }
+        }
+        
+        testInProgress = true;
+        testPaused = false;
+        currentQuestionIndex = 0;
+        questions = [];
+        userAnswers = [];
+        correctCount = 0;
+        totalTime = 0;
+        
+        questions = generateQuestions(questionCount, questionType, minTable, maxTable);
+        
+        testArea.classList.remove('hidden');
+        resultsArea.classList.add('hidden');
+        
+        pauseTestBtn.innerHTML = '<i class="fas fa-pause me-2"></i>Pause';
+        
+        testStartTime = Date.now();
+        showQuestion();
+    }
+
+    function generateQuestions(count, type, minTable, maxTable) {
+        const questions = [];
+        
+        for (let i = 0; i < count; i++) {
+            let question;
+            
+            if (type === 'multiplication') {
+                const a = Math.floor(Math.random() * (maxTable - minTable + 1)) + minTable;
+                const b = Math.floor(Math.random() * 20) + 1;
+                question = {
+                    type: 'multiplication',
+                    text: `${a} × ${b} = _____`,
+                    answer: a * b,
+                    options: generateOptions(a * b, 'number')
+                };
+            } else if (type === 'reverse-multiplication') {
+                const a = Math.floor(Math.random() * (maxTable - minTable + 1)) + minTable;
+                const b = Math.floor(Math.random() * 20) + 1;
+                const result = a * b;
+                
+                if (Math.random() > 0.5) {
+                    question = {
+                        type: 'reverse-multiplication',
+                        text: `${result} = _____ × ${b}`,
+                        answer: a,
+                        options: generateOptions(a, 'number')
+                    };
+                } else {
+                    question = {
+                        type: 'reverse-multiplication',
+                        text: `${result} = ${a} × _____`,
+                        answer: b,
+                        options: generateOptions(b, 'number')
+                    };
+                }
+            } else if (type === 'fractions') {
+                const numerator = Math.floor(Math.random() * 30) + 1;
+                const denominator = Math.floor(Math.random() * 30) + 1;
+                const percentage = (numerator / denominator * 100).toFixed(2);
+                question = {
+                    type: 'fraction',
+                    text: `${numerator}/${denominator} = _____%`,
+                    answer: percentage,
+                    options: generateOptions(percentage, 'percentage')
+                };
+            } else if (type === 'squares') {
+                const n = Math.floor(Math.random() * (maxTable - minTable + 1)) + minTable;
+                question = {
+                    type: 'squares',
+                    text: `${n}² = _____`,
+                    answer: n * n,
+                    options: generateOptions(n * n, 'number')
+                };
+            } else if (type === 'cubes') {
+                const n = Math.floor(Math.random() * (maxTable - minTable + 1)) + minTable;
+                question = {
+                    type: 'cubes',
+                    text: `${n}³ = _____`,
+                    answer: n * n * n,
+                    options: generateOptions(n * n * n, 'number')
+                };
+            } else {
+                const randomType = Math.random();
+                if (randomType < 0.4) {
+                    const a = Math.floor(Math.random() * (maxTable - minTable + 1)) + minTable;
+                    const b = Math.floor(Math.random() * 20) + 1;
+                    question = {
+                        type: 'multiplication',
+                        text: `${a} × ${b} = _____`,
+                        answer: a * b,
+                        options: generateOptions(a * b, 'number')
+                    };
+                } else if (randomType < 0.8) {
+                    const a = Math.floor(Math.random() * (maxTable - minTable + 1)) + minTable;
+                    const b = Math.floor(Math.random() * 20) + 1;
+                    const result = a * b;
+                    
+                    if (Math.random() > 0.5) {
+                        question = {
+                            type: 'reverse-multiplication',
+                            text: `${result} = _____ × ${b}`,
+                            answer: a,
+                            options: generateOptions(a, 'number')
+                        };
+                    } else {
+                        question = {
+                            type: 'reverse-multiplication',
+                            text: `${result} = ${a} × _____`,
+                            answer: b,
+                            options: generateOptions(b, 'number')
+                        };
+                    }
+                } else {
+                    const numerator = Math.floor(Math.random() * 30) + 1;
+                    const denominator = Math.floor(Math.random() * 30) + 1;
+                    const percentage = (numerator / denominator * 100).toFixed(2);
+                    question = {
+                        type: 'fraction',
+                        text: `${numerator}/${denominator} = _____%`,
+                        answer: percentage,
+                        options: generateOptions(percentage, 'percentage')
+                    };
+                }
+            }
+            
+            questions.push(question);
+        }
+        
+        return questions;
+    }
+
+    function generateOptions(correctAnswer, type) {
+        const options = [correctAnswer];
+        
+        while (options.length < 4) {
+            let option;
+            
+            if (type === 'number') {
+                const variation = Math.floor(Math.random() * 10) - 5;
+                option = parseInt(correctAnswer) + variation;
+                
+                if (option > 0 && !options.includes(option)) {
+                    options.push(option);
+                }
+            } else {
+                const variation = (Math.random() * 10 - 5).toFixed(2);
+                option = (parseFloat(correctAnswer) + parseFloat(variation)).toFixed(2);
+                
+                if (!options.includes(option)) {
+                    options.push(option);
+                }
+            }
+        }
+        
+        return shuffleArray(options);
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function showQuestion() {
+        if (currentQuestionIndex >= questions.length) {
+            endTest();
+            return;
+        }
+        
+        const question = questions[currentQuestionIndex];
+        questionText.textContent = question.text;
+        questionCounter.textContent = `Question ${currentQuestionIndex + 1}/${questions.length}`;
+        
+        timeLeft = parseInt(document.getElementById('time-limit').value);
+        timerElement.textContent = `${timeLeft}s`;
+        timerLine.style.width = '100%';
+        
+        optionsContainer.innerHTML = '';
+
+        const answerMode = (answerModeSelect && answerModeSelect.value) ? answerModeSelect.value : 'with-options';
+
+        if (answerMode === 'with-options') {
+            question.options.forEach(option => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 mb-2';
+
+                const button = document.createElement('button');
+                button.className = 'btn btn-outline-primary option-btn';
+                button.textContent = option;
+                button.addEventListener('click', () => selectAnswer(option));
+
+                col.appendChild(button);
+                optionsContainer.appendChild(col);
+            });
+        } else {
+            const col = document.createElement('div');
+            col.className = 'col-12';
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = 'direct-answer-input';
+            input.className = 'form-control form-control-lg mb-2';
+            input.placeholder = 'Type your answer here and press Save or Enter';
+
+            const btnRow = document.createElement('div');
+            btnRow.className = 'd-flex justify-content-center gap-2';
+
+            const saveBtn = document.createElement('button');
+            saveBtn.className = 'btn btn-success btn-lg';
+            saveBtn.textContent = 'Save & Next';
+            saveBtn.addEventListener('click', () => {
+                const val = input.value.trim();
+                selectAnswer(val === '' ? null : val);
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    saveBtn.click();
+                }
+            });
+
+            col.appendChild(input);
+            btnRow.appendChild(saveBtn);
+            col.appendChild(btnRow);
+            optionsContainer.appendChild(col);
+
+            setTimeout(() => input.focus(), 50);
+        }
+        
+        if (!testPaused) {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+    }
+
+    function updateTimer() {
+        if (testPaused) return;
+        
+        timeLeft--;
+        timerElement.textContent = `${timeLeft}s`;
+        timerLine.style.width = `${(timeLeft / parseInt(document.getElementById('time-limit').value)) * 100}%`;
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            selectAnswer(null);
+        }
+    }
+
+    function togglePauseTest() {
+        testPaused = !testPaused;
+        
+        if (testPaused) {
+            clearInterval(timerInterval);
+            pauseTestBtn.innerHTML = '<i class="fas fa-play me-2"></i>Resume';
+            timerElement.classList.add('blink');
+        } else {
+            timerInterval = setInterval(updateTimer, 1000);
+            pauseTestBtn.innerHTML = '<i class="fas fa-pause me-2"></i>Pause';
+            timerElement.classList.remove('blink');
+        }
+    }
+
+    function stopTest() {
+        if (confirm('Are you sure you want to stop the test? Your progress will be lost.')) {
+            clearInterval(timerInterval);
+            testInProgress = false;
+            testArea.classList.add('hidden');
+            timerElement.classList.remove('blink');
+        }
+    }
+
+    function selectAnswer(selectedAnswer) {
+        clearInterval(timerInterval);
+        timerElement.classList.remove('blink');
+        
+        const question = questions[currentQuestionIndex];
+        userAnswers.push({
+            question: question,
+            selectedAnswer: selectedAnswer,
+            correct: selectedAnswer == question.answer
+        });
+        
+        if (selectedAnswer == question.answer) {
+            correctCount++;
+        }
+        
+        currentQuestionIndex++;
+        setTimeout(showQuestion, 500);
+    }
+
+    function endTest() {
+        testInProgress = false;
+        totalTime = Math.floor((Date.now() - testStartTime) / 1000);
+        
+        const timeBonus = Math.max(0, 300 - totalTime);
+        const score = correctCount * 10 + Math.floor(timeBonus / 10);
+        
+        correctAnswersElement.textContent = correctCount;
+        percentageElement.textContent = `${Math.round((correctCount / questions.length) * 100)}%`;
+        timeTakenElement.textContent = `${totalTime}s`;
+        scoreElement.textContent = score;
+        
+        updatePerformanceChart();
+        
+        saveTestResult(correctCount, questions.length, totalTime, score);
+        
+        updateSkillOverview();
+        
+        testArea.classList.add('hidden');
+        resultsArea.classList.remove('hidden');
+    }
+
+    function saveTestResult(correct, total, time, score) {
+        const testResults = JSON.parse(localStorage.getItem('mathTestResults') || '[]');
+        const questionType = document.getElementById('question-type').value;
+
+        testResults.unshift({
+            date: new Date().toLocaleDateString(),
+            type: questionType,
+            correct: correct,
+            total: total,
+            percentage: Math.round((correct / total) * 100),
+            time: time,
+            score: score
+        });
+
+        const MAX_HISTORY = 200;
+        if (testResults.length > MAX_HISTORY) {
+            testResults.length = MAX_HISTORY;
+        }
+
+        localStorage.setItem('mathTestResults', JSON.stringify(testResults));
+        updateProgressTable(5);
+    }
+
+    function updateProgressTable(limit = 5, targetTableId = 'progress-table') {
+        const progressTable = document.getElementById(targetTableId);
+        const testResults = JSON.parse(localStorage.getItem('mathTestResults') || '[]');
+
+        progressTable.innerHTML = '';
+
+        if (testResults.length === 0) {
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.colSpan = 4;
+            cell.textContent = 'No test results yet. Complete a practice test to see your progress.';
+            cell.className = 'text-center text-muted py-3';
+            row.appendChild(cell);
+            progressTable.appendChild(row);
+            return;
+        }
+
+        let displayResults = testResults;
+        if (limit !== 'all' && typeof limit === 'number') {
+            displayResults = testResults.slice(0, limit);
+        }
+
+        displayResults.forEach(result => {
+            const row = document.createElement('tr');
+
+            const dateCell = document.createElement('td');
+            dateCell.textContent = result.date;
+
+            const typeCell = document.createElement('td');
+            typeCell.textContent = result.type.charAt(0).toUpperCase() + result.type.slice(1);
+
+            const scoreCell = document.createElement('td');
+            scoreCell.textContent = `${result.correct}/${result.total} (${result.percentage}%)`;
+
+            const timeCell = document.createElement('td');
+            timeCell.textContent = `${result.time}s`;
+
+            row.appendChild(dateCell);
+            row.appendChild(typeCell);
+            row.appendChild(scoreCell);
+            row.appendChild(timeCell);
+            progressTable.appendChild(row);
+        });
+    }
+
+    function initializePerformanceChart() {
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        performanceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Test Score (%)',
+                    data: [],
+                    borderColor: '#6a11cb',
+                    backgroundColor: 'rgba(106, 17, 203, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Score: ${context.parsed.y}%`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        updatePerformanceChart();
+    }
+
+    function updatePerformanceChart() {
+        const testResults = JSON.parse(localStorage.getItem('mathTestResults') || '[]');
+        
+        if (testResults.length > 0) {
+            const labels = testResults.map(r => r.date).reverse();
+            const data = testResults.map(r => r.percentage).reverse();
+            
+            performanceChart.data.labels = labels;
+            performanceChart.data.datasets[0].data = data;
+            performanceChart.update();
+        }
+    }
+
+    function reviewAnswers() {
+        alert('Review feature would show each question with your answer and the correct answer. This is a simplified implementation.');
+    }
+
+    // Initialize the application when the page loads
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
