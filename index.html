@@ -30,21 +30,78 @@
         }
         
         .navbar {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            z-index: 1030; /* above page content */
-            height: 80px; /* or any value you prefer */
-            padding: 0 1rem;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 1030;
+        height: 80px;
+        padding: 0 1rem;
         }
-        
+            /* Style the toggler as a boxed button and position it on the left in mobile */
+            .navbar-toggler {
+                border-radius: 8px;
+                border: 1px solid rgba(255,255,255,0.12);
+                background: rgba(255,255,255,0.06);
+                padding: .45rem .6rem;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+            }
+
+            /* Mobile-specific layout: put toggler left, center brand, collapse on right */
+            @media (max-width: 991.98px) {
+                .navbar .container {
+                    display: flex;
+                    align-items: center;
+                    gap: .5rem;
+                }
+
+                .navbar-toggler {
+                    order: 0; /* appear first (left) */
+                }
+
+                .navbar-brand {
+                    order: 1;
+                    margin: 0 auto; /* center brand */
+                }
+
+                .navbar-collapse {
+                    order: 2;
+                }
+            }
+
         .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: black !important;
+        }
+
+        .navbar-nav .nav-link {
+        font-weight: bold;
+        color: black !important;
+        transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+        color: #d2d219 !important;
+        }
+
+        /* Boxed menu container */
+        .navbar-nav {
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.06);
+            padding: 4px;
+            border-radius: 10px;
+        }
+
+        /* When the collapse is open on small screens, show boxed background */
+        .navbar-collapse.collapse.show {
+            background: rgba(255,255,255,0.06);
+            padding: 8px;
+            border-radius: 8px;
         }
         
         .hero-section {
@@ -439,6 +496,7 @@
                 <span class="exam-badge">State PSCs</span>
                 <span class="exam-badge">Defence Exams</span>
                 <span class="exam-badge">Teaching Exams</span>
+                <span class="exam-badge">All Quants</span>
             </div>
         </div>
     </section>
@@ -1875,6 +1933,8 @@
     }
 
     function populateTableSelect() {
+        if (!tableSelect) return;
+        tableSelect.innerHTML = ''; // clear any existing options to avoid duplicates
         for (let i = 1; i <= 24; i++) {
             const option = document.createElement('option');
             option.value = i;
@@ -1906,6 +1966,8 @@
     }
 
     function populateNumeratorSelect() {
+        if (!numeratorSelect) return;
+        numeratorSelect.innerHTML = ''; // clear existing options
         for (let i = 1; i <= 30; i++) {
             const option = document.createElement('option');
             option.value = i;
@@ -2637,7 +2699,8 @@
     }
 
     // Initialize the application when the page loads
-    document.addEventListener('DOMContentLoaded', init);
+    // `init` is invoked via `checkExistingAccess()` -> `initializeUserSession()` -> `initMainApp()`
+    // Remove duplicate direct `init` listener to avoid double-initialization which causes duplicate select options.
 </script>
 </body>
 </html>
